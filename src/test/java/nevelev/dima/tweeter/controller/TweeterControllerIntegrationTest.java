@@ -1,8 +1,7 @@
 package nevelev.dima.tweeter.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.application.Application;
-import nevelev.dima.tweeter.TestUtils;
+import com.google.gson.Gson;
 import nevelev.dima.tweeter.TweeterApplication;
 import nevelev.dima.tweeter.domain.Tweet;
 import nevelev.dima.tweeter.repository.TweeterRepository;
@@ -10,12 +9,7 @@ import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.skyscreamer.jsonassert.*;
-import org.skyscreamer.jsonassert.comparator.CustomComparator;
-import org.skyscreamer.jsonassert.comparator.DefaultComparator;
-import org.skyscreamer.jsonassert.comparator.JSONComparator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -25,9 +19,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -36,7 +28,7 @@ import java.util.Calendar;
 import static net.javacrumbs.jsonunit.JsonAssert.assertJsonEquals;
 import static net.javacrumbs.jsonunit.JsonAssert.whenIgnoringPaths;
 import static org.junit.Assert.*;
-import static org.springframework.boot.test.context.SpringBootTest.*;
+import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TweeterApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -49,7 +41,6 @@ public class TweeterControllerIntegrationTest {
     private int port;
 
     TestRestTemplate restTemplate = new TestRestTemplate();
-
     HttpHeaders headers = new HttpHeaders();
 
     @Test
@@ -72,7 +63,6 @@ public class TweeterControllerIntegrationTest {
                 .thenReturn(tweets);
         
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
-
         ResponseEntity<String> response = restTemplate.exchange(
                 createURLWithPort("/feed"),
                 HttpMethod.GET, entity, String.class);
@@ -87,19 +77,28 @@ public class TweeterControllerIntegrationTest {
     @Test
     public void save() throws JSONException, IOException {
 
+        ObjectMapper mapper = new ObjectMapper();
         Tweet tweet = Tweet.builder().name("foo").tweet("foo-tweet").build();
-        Mockito.when(repository.save(tweet))
-                .thenReturn(TestUtils.setId(tweet));
+        Mockito.when(repository.save(any(Tweet.class)))
+                .thenAnswer((Answer<Tweet>) invocation -> {
+                    Object[] arguments = invocation.getArguments();
+                    if (arguments != null && arguments.length > 0 && arguments[0] != null){
+                        Tweet tweet1 = (Tweet) arguments[0];
+                        tweet1.setId("foo1");
+                        return tweet1;
+                    }
+                    return null;
+                });
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>(tweet.toString(), headers);
+        HttpEntity<String> entity = new HttpEntity<>(mapper.writeValueAsString(tweet), headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
                 createURLWithPort("/tweet"),
                 HttpMethod.POST, entity, String.class);
 
-
-        ObjectMapper mapper = new ObjectMapper();
-        Tweet found = mapper.readValue(response.getBody(), Tweet.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Gson gson = new Gson();
+        Tweet found = gson.fromJson(response.getBody(), Tweet.class);
         assertNotNull(found.getId());
         assertNotNull(found.getCreatedDate());
         assertEquals(tweet.getName(), found.getName());

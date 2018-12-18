@@ -3,7 +3,6 @@ package nevelev.dima.tweeter.service;
 import nevelev.dima.tweeter.TestUtils;
 import nevelev.dima.tweeter.domain.Tweet;
 import nevelev.dima.tweeter.repository.TweeterRepository;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -17,13 +16,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 
 @RunWith(SpringRunner.class)
 public class TweeterServiceInregarationTest {
