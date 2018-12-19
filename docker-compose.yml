@@ -36,8 +36,6 @@ services:
     image: 'dimanevelev/tweeter'
     container_name: tweetersrvr
     restart: always
-    stdin_open: true
-    tty: true
     ports:
       - 8080:8080
       - 5005:5005 # remote debug port
@@ -47,23 +45,7 @@ services:
       - consuldev
     dns:
       - ${IP_PREFIX}.10
-#    environment:
-#      - 'JAVA_ARGS=${JAVA_ARGS}'
     command: "java ${JAVA_ARGS} -jar /usr/local/run/tweeter.jar"
-
-  test:
-    image: "azukiapp/dig"
-    container_name: test
-    stdin_open: true
-    tty: true
-    restart: on-failure
-    command: "tail -f /dev/null"
-    networks:
-      - app_subnet
-    depends_on:
-      - consuldev
-    dns:
-      - ${IP_PREFIX}.10
 
 networks:
   app_subnet:
