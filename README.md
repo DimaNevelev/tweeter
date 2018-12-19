@@ -1,4 +1,4 @@
-# Consul POC Overview
+# Consul Task Overview
 
 This project is built from three services:
 * Consul service for registry
@@ -47,11 +47,14 @@ and then run:
 java -jar target/tweeter.jar
 ```
 
-By default, the build will be done using `dev` profile and will be built with an in-app embedded MongoDB.  
-If the mongo resolver via DNS feature is required run 
-```./mvnw clean package -Pprod``` 
+By default, the build will be done using `dev` profile and will require locally instaled MogoDB.  
+If the mongo resolver via DNS feature is required, run: 
+```
+./mvnw clean package -Pprod
+``` 
 The DNS URL can be changed in `src/main/java/resources/application.yml#spring.consul.mongodnsname`.  
 For tests run:
 ```
 ./mvnw clean test
 ```
+The tests are running on in-memory embeded DB.

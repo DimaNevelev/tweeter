@@ -16,7 +16,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 @Configuration
-@Profile("!dev")
+@Profile("prod")
 @EnableMongoRepositories(value = "nevelev.dima.tweeter.repository")
 public class CustomMongoConfiguration extends AbstractMongoConfiguration {
 
