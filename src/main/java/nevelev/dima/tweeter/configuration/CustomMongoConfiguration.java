@@ -40,7 +40,6 @@ public class CustomMongoConfiguration extends AbstractMongoConfiguration {
 
     @Override
     public MongoClient mongoClient() {
-        System.err.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx: " + dnsName);
         Lookup lookup;
         try {
             lookup = new Lookup(dnsName, Type.A);
@@ -53,8 +52,7 @@ public class CustomMongoConfiguration extends AbstractMongoConfiguration {
 
     private MongoClient getMongoClientFromRecords(Record[] records) {
         if (ArrayUtils.isEmpty(records)) {
-//            throw new IllegalStateException("Failed to find address using the provided DNS: " + dnsName);
-            return new MongoClient(); // todo remove this
+            throw new IllegalStateException("Failed to find address using the provided DNS: " + dnsName);
         }
         for (Record record : records) {
             String address = ((ARecord)record).getAddress().getHostAddress();

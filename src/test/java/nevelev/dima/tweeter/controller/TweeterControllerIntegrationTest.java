@@ -19,7 +19,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -30,7 +30,7 @@ import static net.javacrumbs.jsonunit.JsonAssert.whenIgnoringPaths;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 
-@RunWith(SpringRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = TweeterApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TweeterControllerIntegrationTest {
 

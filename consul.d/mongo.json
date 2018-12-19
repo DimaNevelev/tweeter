@@ -1,8 +1,8 @@
 {
   "service": {
-    "name": "mongosrv",
+    "name": "mongo",
     "tags": ["mongodb"],
     "port": 27017,
-    "address": "172.16.1.4"
+    "address": "173.17.1.4"
   }
 }
