@@ -1,0 +1,15 @@
+FROM openjdk:8-jdk-alpine
+
+ARG JAVA_ARGS
+ADD . /usr/local/tweeter
+
+COPY srvr-entrypoint.sh /usr/local/run/
+
+RUN cd /usr/local/tweeter \
+    && ./mvnw clean package -Pprod \
+    && cp target/tweeter.jar /usr/local/run/
+
+RUN chmod +x /usr/local/run/srvr-entrypoint.sh \
+    && chmod +x /usr/local/run/tweeter.jar
+
+EXPOSE 8080 5005

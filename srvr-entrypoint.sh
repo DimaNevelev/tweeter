@@ -5,4 +5,5 @@ exec "java" \
     $JAVA_ARGS \
     -jar \
     /usr/local/run/tweeter.jar \
-    "$@"
+
+exec "$@"

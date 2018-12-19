@@ -1,7 +1,7 @@
 spring:
     consul:
-        mongodnsname: mongo.service.consul
+        mongodnsname: mongosrv.service.consul
     data:
         mongodb:
             database: tweeter
-            uri: mongodb://localhost@mon:8600/tweeter
+            uri: mongodb://localhost:27017/tweeter

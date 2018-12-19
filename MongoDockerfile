@@ -1,0 +1,15 @@
+FROM mongo:4.1.6
+
+ADD . /usr/local/tweeter
+
+COPY mongo-entrypoint.sh /usr/local/run/
+
+RUN chmod +x /usr/local/run/mongo-entrypoint.sh
+
+RUN apt-get update && apt-get install -y curl
+
+ENTRYPOINT ["/usr/local/run/mongo-entrypoint.sh"]
+
+EXPOSE 27017
+
+CMD [ "mongod", "--bind_ip_all" ]
