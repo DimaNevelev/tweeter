@@ -4,7 +4,7 @@ ADD . /usr/local/tweeter
 
 RUN cd /usr/local/tweeter \
     && ./mvnw clean package -Pprod \
-    && mkdir /usr/local/run/
+    && mkdir /usr/local/run/ \
     && cp target/tweeter.jar /usr/local/run/
 
 RUN chmod +x /usr/local/run/tweeter.jar
